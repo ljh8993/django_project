@@ -11,10 +11,9 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os, json
-import pymysql
-
-pymysql.install_as_MySQLdb()
-pymysql.version_info = (1, 4, 2, "final", 0) # 호환성 문제로 추가
+# import pymysql
+# pymysql.install_as_MySQLdb()
+# pymysql.version_info = (1, 4, 2, "final", 0) # 호환성 문제로 추가
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -78,25 +77,28 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-SECRET_DATABASE = {
-    'ENGINE': 'django.db.backends.mysql',
-    'NAME': '',
-    'USER': '',
-    'PASSWORD': '',
-    'HOST': '',
-    'PORT': 0
-}
-
-with open(f"{BASE_DIR}/secret.json") as f:
-    SECRET_DATABASE = json.loads(f.read().strip())
 
 DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': 0,
+        'OPTIONS': { # 단순 emojo 저장을 위함
+            'charset': 'utf8mb4',
+            'use_unicode': True,
+        },
+    }
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     # }
-    'default': SECRET_DATABASE
 }
+
+with open(f"{BASE_DIR}/secret.json") as f:
+    DATABASES = json.loads(f.read())
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
